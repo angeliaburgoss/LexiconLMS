@@ -1,0 +1,39 @@
+﻿@using LexiconLMS.Models
+@using LexiconLMS.Data
+@page "/Models/Course"
+@rendermode InteractiveServer
+@inject ApplicationDbContext Dbcontext
+@inject HttpClient Http
+
+<h3>Courses</h3>
+<thead>
+    <tr>
+        <tr>Course Id</tr>
+        <tr>Name</tr>
+        <tr>Description</tr>
+        <tr>Start date</tr>
+
+    </tr>
+
+</thead>
+<tbody>
+    @foreach (var course in courses)
+    {
+        <tr>
+            <td>@course.CourseId</td>
+            <td>@course.CourseDescription</td>
+            <td>@course.CourseName</td>
+            <td>@course.StartDate</td>
+        </tr>
+    }
+
+</tbody>
+
+@code {
+    private List<Course>? courses;
+    protected override async Task OnInitializedAsync()
+    {
+
+        courses = await Http.GetFromJsonAsync<List<Course>>("api/courses");
+    }
+}

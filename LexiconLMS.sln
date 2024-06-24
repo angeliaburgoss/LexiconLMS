@@ -5,7 +5,10 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LexiconLMS", "LexiconLMS\LexiconLMS.csproj", "{5EBBE501-55EF-49E9-AD0E-65A22631023B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexiconLMSAPI.Api", "LexiconLMSAPI.Api\LexiconLMSAPI.Api.csproj", "{CE94BFA1-EAF6-44E1-9297-73616F2375EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LexiconLMSAPI.Api", "LexiconLMSAPI.Api\LexiconLMSAPI.Api.csproj", "{CE94BFA1-EAF6-44E1-9297-73616F2375EA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5EBBE501-55EF-49E9-AD0E-65A22631023B} = {5EBBE501-55EF-49E9-AD0E-65A22631023B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
