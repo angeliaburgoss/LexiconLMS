@@ -4,9 +4,8 @@
     {
         public int CourseId { get; set; }
         public string CourseName { get; set; }
-        public string CourseDescription { get;}
+        public string CourseDescription { get; set; }
         public DateTime StartDate { get; set; }
-
         public int UserId { get; set; }
     }
 }

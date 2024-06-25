@@ -4,19 +4,20 @@
 @rendermode InteractiveServer
 @inject ApplicationDbContext Dbcontext
 @inject HttpClient Http
+@inject IHttpClientFactory HttpClientFactory
 
-<h3>Courses</h3>
 <thead>
     <tr>
-        <tr>Course Id</tr>
-        <tr>Name</tr>
-        <tr>Description</tr>
-        <tr>Start date</tr>
-
+        <th>Course Id</th>
+        <th>Course Description</th>
+        <th>Course Name</th>
+        <th>Start Date</th>
     </tr>
-
 </thead>
 <tbody>
+    @if (courses != null)
+    {
+        
     @foreach (var course in courses)
     {
         <tr>
@@ -26,14 +27,15 @@
             <td>@course.StartDate</td>
         </tr>
     }
-
+    }
 </tbody>
 
 @code {
-    private List<Course>? courses;
+    private List<Course> courses;
+
     protected override async Task OnInitializedAsync()
     {
-
-        courses = await Http.GetFromJsonAsync<List<Course>>("/Course");
+        var client = HttpClientFactory.CreateClient("ApiClient");
+        courses = await client.GetFromJsonAsync<List<Course>>("/api/Courses");
     }
 }
