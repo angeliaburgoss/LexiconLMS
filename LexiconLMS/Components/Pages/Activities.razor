@@ -1,0 +1,43 @@
+﻿@using LexiconLMS.Models
+@using LexiconLMS.Data
+@page "/Models/Activity"
+@rendermode InteractiveServer
+@inject ApplicationDbContext Dbcontext
+@inject HttpClient Http
+@inject IHttpClientFactory HttpClientFactory
+
+<thead>
+    <tr>
+        <th>Activity Id</th>
+        <th>Activity Name</th>
+        <th>Activity Description</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+    </tr>
+</thead>
+<tbody>
+    @if (activities != null)
+    {
+        
+    @foreach (var activity in activities)
+    {
+        <tr>
+            <td>@activity.ActivityId</td>
+            <td>@activity.ActivityName</td>
+            <td>@activity.ActivityDescription</td>
+            <td>@activity.StartDate</td>
+            <td>@activity.EndDate</td>
+        </tr>
+    }
+    }
+</tbody>
+
+@code {
+    private List<Activity> activities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient("ApiClient");
+        activities = await client.GetFromJsonAsync<List<Activity>>("/api/Activities");
+    }
+}
