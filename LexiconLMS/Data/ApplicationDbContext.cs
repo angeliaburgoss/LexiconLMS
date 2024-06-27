@@ -12,9 +12,6 @@ namespace LexiconLMS.Data
         {
         }
 
-        public DbSet<Activity> Activities { get; set; }
-        public DbSet<Course> Courses { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -36,6 +33,9 @@ namespace LexiconLMS.Data
                 }
             );
         }
+
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Course> Courses { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<User> Users { get; set; }
