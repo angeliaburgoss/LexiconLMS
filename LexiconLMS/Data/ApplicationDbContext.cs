@@ -21,17 +21,45 @@ namespace LexiconLMS.Data
                 {
                     CourseId = 1,
                     CourseName = " Programming",
-                    CourseDescription = "Learn  C#.",
+                    CourseDescription = "Learn  C#",
                     StartDate = DateTime.Now
                 },
                 new Course
                 {
                     CourseId = 2,
                     CourseName = "Databases",
-                    CourseDescription = " database design .",
+                    CourseDescription = "Database Design",
                     StartDate = DateTime.Now
                 }
             );
+
+            DateTime startDate = DateTime.Now;
+            DateTime endDate = startDate.AddDays( 30);
+
+            modelBuilder.Entity<Module>().HasData(
+                new Module
+                {
+                    ModuleId = 1,
+                    ModuleName = ".NET",
+                    ModuleDescription = "Fullstack developer",
+                    StartDate = startDate,
+                    EndDate = endDate
+                }
+                ); 
+
+            DateTime start = DateTime.Now;
+            DateTime end = start.AddDays( 7 );
+            modelBuilder.Entity<Activity>().HasData(
+                new Activity
+                {
+                    ActivityId = 1,
+                    ActivityName = "LexiconLMS",
+                    ActivityDescription = "Blazor + API",
+                    StartDate = start,
+                    EndDate = end
+
+                }
+                );
         }
 
         public DbSet<Activity> Activities { get; set; }
