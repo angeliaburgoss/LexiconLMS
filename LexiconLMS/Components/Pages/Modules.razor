@@ -5,9 +5,13 @@
 @inject ApplicationDbContext Dbcontext
 @inject HttpClient Http
 @inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+
 
 
 <h3>Modules</h3>
+
+<button class="btn btn-primary" @onclick="ReturnToCourses">Return to Courses</button>
 
 <table class="table">
 <thead>
@@ -36,12 +40,24 @@
     }
 </tbody>
 </table>
+
 @code {
     private List<Module> modules;
+    
 
     protected override async Task OnInitializedAsync()
     {
-        var client = HttpClientFactory.CreateClient("ApiClient");
-        modules = await client.GetFromJsonAsync<List<Module>>("/api/Modules");
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+        if (query.TryGetValue("courseId", out var courseId))
+        {
+            var client = HttpClientFactory.CreateClient("ApiClient");
+            modules = await client.GetFromJsonAsync<List<Module>>($"/api/Modules?courseId={courseId}");
+        }
+    }
+
+    private void ReturnToCourses()
+    {
+        Navigation.NavigateTo("Models/Course");
     }
 }
