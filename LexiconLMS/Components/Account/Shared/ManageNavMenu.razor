@@ -1,18 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using LexiconLMS.Data
+@using Microsoft.AspNetCore.Components.Authorization
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage" Match="NavLinkMatch.All">Profile</NavLink>
     </li>
+
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/Email">Email</NavLink>
     </li>
+
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/ChangePassword">Password</NavLink>
     </li>
+
     @if (hasExternalLogins)
     {
         <li class="nav-item">
@@ -22,16 +28,36 @@
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/TwoFactorAuthentication">Two-factor authentication</NavLink>
     </li>
+
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/PersonalData">Personal data</NavLink>
+    </li>
+
+    <li class="nav-item">
+        <span class="nav-link disabled">@Role</span>
     </li>
 </ul>
 
 @code {
     private bool hasExternalLogins;
+    private string Role { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var appUser = await UserManager.GetUserAsync(user);
+            if (appUser !=null)
+            {
+                var roles = await UserManager.GetRolesAsync(appUser);
+                Role = roles.FirstOrDefault() ?? "No role assigned";
+            }
+
+        }
     }
 }
