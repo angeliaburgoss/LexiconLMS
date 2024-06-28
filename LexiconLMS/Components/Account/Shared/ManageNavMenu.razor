@@ -32,32 +32,18 @@
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/PersonalData">Personal data</NavLink>
     </li>
+    <AuthorizeView Roles="Teacher">
+        <p>Teacher</p>
+    </AuthorizeView>
 
-    <li class="nav-item">
-        <span class="nav-link disabled">@Role</span>
-    </li>
+    <AuthorizeView Roles="Student">
+        <p>Student</p>
+    </AuthorizeView>
+
+
 </ul>
 
 @code {
     private bool hasExternalLogins;
-    private string Role { get; set; } = string.Empty;
-
-    protected override async Task OnInitializedAsync()
-    {
-        hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            var appUser = await UserManager.GetUserAsync(user);
-            if (appUser !=null)
-            {
-                var roles = await UserManager.GetRolesAsync(appUser);
-                Role = roles.FirstOrDefault() ?? "No role assigned";
-            }
-
-        }
-    }
+ 
 }

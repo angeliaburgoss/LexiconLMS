@@ -78,6 +78,7 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+      
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
@@ -87,6 +88,12 @@
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
+            return;
+        }
+        var roleResult = await UserManager.AddToRoleAsync(user, Input.Role);
+        if (!roleResult.Succeeded)
+        {
+            identityErrors = roleResult.Errors;
             return;
         }
 
@@ -108,15 +115,7 @@
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
 
-        if (!string.IsNullOrEmpty(Input.Role))
-        {
-            var roleResult = await UserManager.AddToRoleAsync(user, Input.Role);
-            if (!roleResult.Succeeded)
-            {
-                identityErrors = roleResult.Errors;
-                return;
-            }
-        }
+       
 
         await SignInManager.SignInAsync(user, isPersistent: false);
         RedirectManager.RedirectTo(ReturnUrl);
