@@ -24,6 +24,7 @@
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
+
             <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
@@ -41,6 +42,15 @@
                 <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                 <label for="confirm-password">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputSelect @bind-Value="Input.Role" class="form-control" aria-required="true">
+                    <option value="">Select a role</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Student">Student</option>
+                </InputSelect>
+                <label for="role">Role</label>
+                <ValidationMessage For="() => Input.Role" class="text-danger" />
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
@@ -68,6 +78,7 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+      
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
@@ -77,6 +88,12 @@
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
+            return;
+        }
+        var roleResult = await UserManager.AddToRoleAsync(user, Input.Role);
+        if (!roleResult.Succeeded)
+        {
+            identityErrors = roleResult.Errors;
             return;
         }
 
@@ -97,6 +114,8 @@
                 "Account/RegisterConfirmation",
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
+
+       
 
         await SignInManager.SignInAsync(user, isPersistent: false);
         RedirectManager.RedirectTo(ReturnUrl);
@@ -141,5 +160,9 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; } = "";
     }
 }

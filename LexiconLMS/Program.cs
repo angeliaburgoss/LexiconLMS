@@ -9,7 +9,7 @@ namespace LexiconLMS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +28,7 @@ namespace LexiconLMS
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+            
 
             builder.Services.AddAuthentication(options =>
             {
@@ -36,19 +37,41 @@ namespace LexiconLMS
             })
                 .AddIdentityCookies();
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
+            builder.Services.AddScoped<RoleManager<IdentityRole>>();
+
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var logger = services.GetRequiredService<ILogger<Program>>();
+
+                try
+                {
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await CreateRoles(roleManager);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occured while created roles");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -74,6 +97,20 @@ namespace LexiconLMS
             app.MapAdditionalIdentityEndpoints();
 
             app.Run();
+        }
+
+        private static async Task CreateRoles(RoleManager<IdentityRole> roleManager)
+        {
+            string[] roleNames = { "Teacher", "Student" };
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExcists = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExcists)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
         }
     }
 }

@@ -1,18 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using LexiconLMS.Data
+@using Microsoft.AspNetCore.Components.Authorization
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage" Match="NavLinkMatch.All">Profile</NavLink>
     </li>
+
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/Email">Email</NavLink>
     </li>
+
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/ChangePassword">Password</NavLink>
     </li>
+
     @if (hasExternalLogins)
     {
         <li class="nav-item">
@@ -22,16 +28,22 @@
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/TwoFactorAuthentication">Two-factor authentication</NavLink>
     </li>
+
     <li class="nav-item">
         <NavLink class="nav-link" href="Account/Manage/PersonalData">Personal data</NavLink>
     </li>
+    <AuthorizeView Roles="Teacher">
+        <p>Teacher</p>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Student">
+        <p>Student</p>
+    </AuthorizeView>
+
+
 </ul>
 
 @code {
     private bool hasExternalLogins;
-
-    protected override async Task OnInitializedAsync()
-    {
-        hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-    }
+ 
 }

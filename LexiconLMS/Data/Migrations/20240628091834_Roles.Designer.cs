@@ -4,6 +4,7 @@ using LexiconLMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LexiconLMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240628091834_Roles")]
+    partial class Roles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,10 +43,6 @@ namespace LexiconLMS.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Fullname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -153,7 +152,7 @@ namespace LexiconLMS.Migrations
                             CourseId = 1,
                             CourseDescription = "Learn  C#.",
                             CourseName = " Programming",
-                            StartDate = new DateTime(2024, 6, 28, 10, 4, 41, 28, DateTimeKind.Local).AddTicks(6229),
+                            StartDate = new DateTime(2024, 6, 28, 11, 18, 34, 69, DateTimeKind.Local).AddTicks(4345),
                             UserId = 0
                         },
                         new
@@ -161,7 +160,7 @@ namespace LexiconLMS.Migrations
                             CourseId = 2,
                             CourseDescription = " database design .",
                             CourseName = "Databases",
-                            StartDate = new DateTime(2024, 6, 28, 10, 4, 41, 28, DateTimeKind.Local).AddTicks(6272),
+                            StartDate = new DateTime(2024, 6, 28, 11, 18, 34, 69, DateTimeKind.Local).AddTicks(4387),
                             UserId = 0
                         });
                 });
