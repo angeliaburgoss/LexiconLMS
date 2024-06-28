@@ -9,7 +9,7 @@ namespace LexiconLMS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +50,22 @@ namespace LexiconLMS
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var logger = services.GetRequiredService<ILogger<Program>>();
+
+                try
+                {
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await CreateRoles(roleManager);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occured while created roles");
+                }
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -74,6 +90,20 @@ namespace LexiconLMS
             app.MapAdditionalIdentityEndpoints();
 
             app.Run();
+        }
+
+        private static async Task CreateRoles(RoleManager<IdentityRole> roleManager)
+        {
+            string[] roleNames = { "Teacher", "Student" };
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExcists = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExcists)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
         }
     }
 }
