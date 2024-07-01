@@ -19,6 +19,12 @@ namespace LexiconLMSAPI.Api.Controllers
             _context = context;
             }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Module>>> GetModules()
+            {
+            return await _context.Modules.ToListAsync();
+            }
+
         [HttpGet("{courseId}")]
         public async Task<ActionResult<IEnumerable<Module>>> GetModules(int courseId)
             {
