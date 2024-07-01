@@ -10,7 +10,7 @@
 
 <h3>Activities</h3>
 
-<button class="btn btn-primary" @onclick="ReturnToCourses">Return to Courses</button>
+<button class="btn btn-primary" @onclick="ReturnToModules">Return to Modules</button>
 
 <table class="table">
 <thead>
@@ -49,16 +49,16 @@
     {
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-        if (query.TryGetValue("courseId", out var courseId))
+        if (query.TryGetValue("moduleId", out var moduleId))
         {
             var client = HttpClientFactory.CreateClient("ApiClient");
-            activities = await client.GetFromJsonAsync<List<Activity>>($"/api/Activities?courseId={courseId}");
+            activities = await client.GetFromJsonAsync<List<Activity>>($"/api/Activities?moduleId={moduleId}");
         }
        
     }
 
-    private void ReturnToCourses()
+    private void ReturnToModules()
     {
-        Navigation.NavigateTo("Models/Course");
+        Navigation.NavigateTo("Models/Module");
     }
 }
