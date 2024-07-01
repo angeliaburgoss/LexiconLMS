@@ -5,6 +5,7 @@
 @inject ApplicationDbContext Dbcontext
 @inject HttpClient Http
 @inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
 
 <h3>Courses</h3>
 
@@ -28,6 +29,10 @@
             <td>@course.CourseName</td>
             <td>@course.CourseDescription</td>
             <td>@course.StartDate</td>
+            <td>
+                <button class="btn btn-primary" @onclick="() => NavigateToModules(course.CourseId)">View Modules</button>
+                <button class="btn btn-primary" @onclick="() => NavigateToActivities(course.CourseId)">View Activites </button>
+            </td>
         </tr>
     }
     }
@@ -41,5 +46,15 @@
     {
         var client = HttpClientFactory.CreateClient("ApiClient");
         courses = await client.GetFromJsonAsync<List<Course>>("/api/Courses");
+    }
+
+    private void NavigateToModules(int courseId)
+    {
+        Navigation.NavigateTo($"/Models/Module?courseId={courseId}");
+    }
+
+    private void NavigateToActivities(int courseId)
+    {
+        Navigation.NavigateTo($"/Models/Activity?courseId={courseId}");
     }
 }
