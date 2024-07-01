@@ -31,7 +31,6 @@
             <td>@course.StartDate</td>
             <td>
                 <button class="btn btn-primary" @onclick="() => NavigateToModules(course.CourseId)">View Modules</button>
-                <button class="btn btn-primary" @onclick="() => NavigateToActivities(course.CourseId)">View Activites </button>
             </td>
         </tr>
     }
@@ -53,8 +52,5 @@
         Navigation.NavigateTo($"/Models/Module?courseId={courseId}");
     }
 
-    private void NavigateToActivities(int courseId)
-    {
-        Navigation.NavigateTo($"/Models/Activity?courseId={courseId}");
-    }
+   
 }

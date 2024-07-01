@@ -14,50 +14,58 @@
 <button class="btn btn-primary" @onclick="ReturnToCourses">Return to Courses</button>
 
 <table class="table">
-<thead>
-    <tr>
-        <th>Module Id</th>
-        <th>Module Name</th>
-        <th>Module Description</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-    </tr>
-</thead>
-<tbody>
-    @if (modules != null)
-    {
-        
-    @foreach (var module in modules)
-    {
+    <thead>
         <tr>
-            <td>@module.ModuleId</td>
-            <td>@module.ModuleName</td>
-            <td>@module.ModuleDescription</td>
-            <td>@module.StartDate</td>
-            <td>@module.EndDate</td>
+            <th>Module Id</th>
+            <th>Module Name</th>
+            <th>Module Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
         </tr>
-    }
-    }
-</tbody>
+    </thead>
+    <tbody>
+        @if (modules != null)
+            {
+
+            @foreach (var module in modules)
+                {
+                <tr>
+                    <td>@module.ModuleId</td>
+                    <td>@module.ModuleName</td>
+                    <td>@module.ModuleDescription</td>
+                    <td>@module.StartDate</td>
+                    <td>@module.EndDate</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => NavigateToActivities(module.ModuleId)">View Activites </button>
+                    </td>
+                </tr>
+                }
+            }
+    </tbody>
 </table>
 
 @code {
+
     private List<Module> modules;
-    
 
     protected override async Task OnInitializedAsync()
-    {
+        {
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
         if (query.TryGetValue("courseId", out var courseId))
-        {
+            {
             var client = HttpClientFactory.CreateClient("ApiClient");
             modules = await client.GetFromJsonAsync<List<Module>>($"/api/Modules?courseId={courseId}");
+            }
         }
-    }
 
     private void ReturnToCourses()
-    {
+        {
         Navigation.NavigateTo("Models/Course");
-    }
+        }
+
+    private void NavigateToActivities(int courseId)
+        {
+        Navigation.NavigateTo($"/Models/Activity?courseId={courseId}");
+        }
 }
