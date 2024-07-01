@@ -18,10 +18,11 @@ namespace LexiconLMSAPI.Api.Controllers
             _context = context;
             }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
+        [HttpGet("{moduleId}")]
+        public async Task<ActionResult<IEnumerable<Module>>> GetActivities(int moduleId)
             {
-            return await _context.Activities.ToListAsync();
+            return await _context.Modules.Where(m => m.ModuleId == moduleId).ToListAsync();
             }
         }
     }
+    

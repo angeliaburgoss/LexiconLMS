@@ -55,7 +55,7 @@
         if (query.TryGetValue("courseId", out var courseId))
             {
             var client = HttpClientFactory.CreateClient("ApiClient");
-            modules = await client.GetFromJsonAsync<List<Module>>($"/api/Modules?courseId={courseId}");
+            modules = await client.GetFromJsonAsync<List<Module>>($"/api/Modules/{courseId}");
             }
         }
 
@@ -64,8 +64,8 @@
         Navigation.NavigateTo("Models/Course");
         }
 
-    private void NavigateToActivities(int courseId)
+    private void NavigateToActivities(int moduleId)
         {
-        Navigation.NavigateTo($"/Models/Activity?courseId={courseId}");
+        Navigation.NavigateTo($"/api/Activities?moduleId={moduleId}");
         }
 }

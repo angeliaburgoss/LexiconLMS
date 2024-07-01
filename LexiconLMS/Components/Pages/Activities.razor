@@ -1,6 +1,6 @@
 ﻿@using LexiconLMS.Models
 @using LexiconLMS.Data
-@page "/Models/Activity"
+@page "/api/Activities"
 @rendermode InteractiveServer
 @inject ApplicationDbContext Dbcontext
 @inject HttpClient Http
@@ -52,13 +52,13 @@
         if (query.TryGetValue("moduleId", out var moduleId))
         {
             var client = HttpClientFactory.CreateClient("ApiClient");
-            activities = await client.GetFromJsonAsync<List<Activity>>($"/api/Activities?moduleId={moduleId}");
+            activities = await client.GetFromJsonAsync<List<Activity>>($"/api/Activities/{moduleId}");
         }
        
     }
 
     private void ReturnToModules()
     {
-        Navigation.NavigateTo("Models/Module");
+        Navigation.NavigateTo("api/Modules");
     }
 }
