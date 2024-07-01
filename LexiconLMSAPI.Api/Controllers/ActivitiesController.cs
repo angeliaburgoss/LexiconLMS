@@ -19,9 +19,9 @@ namespace LexiconLMSAPI.Api.Controllers
             }
 
         [HttpGet("{moduleId}")]
-        public async Task<ActionResult<IEnumerable<Module>>> GetActivities(int moduleId)
+        public async Task<ActionResult<IEnumerable<Activity>>> GetActivities(int moduleId)
             {
-            return await _context.Modules.Where(m => m.ModuleId == moduleId).ToListAsync();
+            return await _context.Activities.Where(m => m.ModuleId == moduleId).ToListAsync();
             }
         }
     }
